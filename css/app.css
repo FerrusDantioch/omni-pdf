@@ -203,7 +203,8 @@ body {
   color: var(--discret);
 }
 
-.select-omni {
+.select-omni,
+.input-nombre-omni {
   min-height: 44px;
   font-family: var(--f-des);
   font-size: 0.85rem;
@@ -212,6 +213,20 @@ body {
   border: 1px solid var(--trait);
   border-radius: 8px;
   padding: 6px 10px;
+}
+
+.input-nombre-omni {
+  width: 78px;
+  font-size: 0.9rem;
+  padding: 6px 8px;
+  text-align: center;
+}
+
+.icone-gras {
+  font-family: var(--f-texte);
+  font-weight: 800;
+  font-size: 1.05rem;
+  line-height: 1;
 }
 
 /* Zone centrale : tiroir de miniatures + espace de lecture PDF */
@@ -542,6 +557,7 @@ dialog.modale::backdrop {
 }
 
 .champ-formulaire input[type="text"],
+.champ-formulaire input[type="number"],
 .champ-formulaire textarea,
 .champ-formulaire select {
   width: 100%;
@@ -553,6 +569,19 @@ dialog.modale::backdrop {
   border: 1px solid var(--trait);
   border-radius: 10px;
   padding: 10px 12px;
+}
+
+.ligne-options-texte {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: end;
+}
+
+@media (max-width: 520px) {
+  .ligne-options-texte {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .champ-formulaire textarea {

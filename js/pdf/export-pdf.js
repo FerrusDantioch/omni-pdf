@@ -280,12 +280,13 @@ export async function exporterPdfAnnote(pdfBytes, annotations, options = {}) {
 
       if (ann.type === 'texte') {
         const taille = Math.max(8, (ann.taillePolice || 18) * echelle);
+        const policeUtilisee = ann.gras ? policeGras : policeTexte;
         const margeNormX = (6 * echelle) / visuel.largeur;
         const margeNormY = (6 * echelle) / visuel.hauteur;
         const largeurBlocPdf = Math.max(24, ((ann.w || 0.28) * visuel.largeur) - 12 * echelle);
         const contenuPropre = assainirTexteWinAnsi(ann.contenu || '');
         const lignes = decouperLignesTexte(contenuPropre, largeurBlocPdf, (s) =>
-          policeGras.widthOfTextAtSize(s, taille)
+          policeUtilisee.widthOfTextAtSize(s, taille)
         );
         const hauteurLigne = taille * 1.28;
 
@@ -296,7 +297,7 @@ export async function exporterPdfAnnote(pdfBytes, annotations, options = {}) {
             x: ptPdf.x,
             y: ptPdf.y,
             size: taille,
-            font: policeGras,
+            font: policeUtilisee,
             color: couleurPdf,
             rotate: degrees(visuel.rotation)
           });

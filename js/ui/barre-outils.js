@@ -1,10 +1,17 @@
 /* Gestion de la barre d'outils tactile : outils, couleurs, trait, stylet, Undo/Redo, sélection. */
 
+import {
+  TAILLE_POLICE_MAX,
+  TAILLE_POLICE_MIN,
+  bornerTaillePolice
+} from '../etat/store.js';
+
 export function initialiserBarreOutils(store, { surDemandeEditionSelection }) {
   const boutonsOutils = [...document.querySelectorAll('[data-outil]')];
   const pastillesCouleur = [...document.querySelectorAll('[data-couleur]')];
   const selectEpaisseur = document.getElementById('select-epaisseur');
-  const selectTaillePolice = document.getElementById('select-taille-police');
+  const inputTaillePolice = document.getElementById('input-taille-police');
+  const btnTexteGras = document.getElementById('btn-texte-gras');
   const btnStyletSeul = document.getElementById('btn-stylet-seul');
   const btnAnnuler = document.getElementById('btn-annuler');
   const btnRetablir = document.getElementById('btn-retablir');
@@ -29,8 +36,24 @@ export function initialiserBarreOutils(store, { surDemandeEditionSelection }) {
     store.definirEpaisseur(selectEpaisseur.value);
   });
 
-  selectTaillePolice.addEventListener('change', () => {
-    store.definirTaillePolice(selectTaillePolice.value);
+  inputTaillePolice.addEventListener('input', () => {
+    const brut = Number(inputTaillePolice.value);
+    if (Number.isFinite(brut) && brut >= TAILLE_POLICE_MIN && brut <= TAILLE_POLICE_MAX) {
+      store.definirTaillePolice(brut);
+    }
+  });
+
+  const validerTailleBarre = () => {
+    const borne = bornerTaillePolice(inputTaillePolice.value);
+    inputTaillePolice.value = String(borne);
+    store.definirTaillePolice(borne);
+  };
+
+  inputTaillePolice.addEventListener('change', validerTailleBarre);
+  inputTaillePolice.addEventListener('blur', validerTailleBarre);
+
+  btnTexteGras.addEventListener('click', () => {
+    store.basculerGras();
   });
 
   btnStyletSeul.addEventListener('click', () => {
@@ -61,9 +84,12 @@ export function initialiserBarreOutils(store, { surDemandeEditionSelection }) {
   });
 
   function synchroniser(etat) {
-    const { outilActif, couleur, epaisseur, taillePolice, styletUniquement } = etat.outil;
+    const { outilActif, couleur, epaisseur, taillePolice, gras, styletUniquement } = etat.outil;
     const docOuvert = etat.document.ouvert;
     const sel = store.trouverSelection();
+    const estTexteSel = Boolean(sel && sel.type === 'texte');
+    const tailleCourante = estTexteSel ? bornerTaillePolice(sel.taillePolice) : taillePolice;
+    const grasCourant = estTexteSel ? Boolean(sel.gras) : Boolean(gras);
 
     boutonsOutils.forEach((btn) => {
       btn.setAttribute('aria-pressed', String(btn.dataset.outil === outilActif));
@@ -75,7 +101,10 @@ export function initialiserBarreOutils(store, { surDemandeEditionSelection }) {
     });
 
     selectEpaisseur.value = String(epaisseur);
-    selectTaillePolice.value = String(taillePolice);
+    if (document.activeElement !== inputTaillePolice) {
+      inputTaillePolice.value = String(tailleCourante);
+    }
+    btnTexteGras.setAttribute('aria-pressed', String(grasCourant));
     btnStyletSeul.setAttribute('aria-pressed', String(styletUniquement));
 
     btnAnnuler.disabled = !docOuvert || !store.peutAnnuler();

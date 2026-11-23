@@ -61,7 +61,7 @@ export function attacherInteractionsCanevas({
 
     if (pointeursActifs.size > 2) return;
 
-    const { outilActif, couleur, epaisseur, taillePolice, styletUniquement } = store.etat.outil;
+    const { outilActif, couleur, epaisseur, taillePolice, gras, styletUniquement } = store.etat.outil;
     if (outilActif !== 'selection' && styletUniquement && e.pointerType === 'touch') {
       return;
     }
@@ -139,6 +139,7 @@ export function attacherInteractionsCanevas({
               w: 0.28,
               h: 0.06,
               taillePolice,
+              gras: Boolean(gras),
               contenu: ''
             });
       surEditionDemandee({ mode: 'creer', annotation: brouillon });

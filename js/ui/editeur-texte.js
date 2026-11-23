@@ -1,5 +1,7 @@
 /* Modale de création / édition pour les blocs de texte et les notes / commentaires. */
 
+import { bornerTaillePolice } from '../etat/store.js';
+
 export function initialiserEditeurTexte(store) {
   const modale = document.getElementById('modale-edition-texte');
   const titreModale = document.getElementById('titre-modale-edition');
@@ -7,7 +9,8 @@ export function initialiserEditeurTexte(store) {
   const inputTitreNote = document.getElementById('input-titre-note');
   const inputContenu = document.getElementById('input-contenu-texte');
   const wrapTailleTexte = document.getElementById('champ-taille-texte-wrap');
-  const selectTaille = document.getElementById('select-taille-texte-edition');
+  const inputTaille = document.getElementById('input-taille-texte-edition');
+  const optGras = document.getElementById('opt-texte-gras-edition');
   const btnSupprimer = document.getElementById('btn-supprimer-edition');
   const btnAnnuler = document.getElementById('btn-annuler-edition');
   const btnValider = document.getElementById('btn-valider-edition');
@@ -44,10 +47,12 @@ export function initialiserEditeurTexte(store) {
         store.modifierAnnotation(annotation.id, champs, true);
       }
     } else {
-      const taillePolice = Number(selectTaille.value) || 18;
+      const taillePolice = bornerTaillePolice(inputTaille.value);
+      const gras = optGras.checked;
       const champs = {
         contenu,
-        taillePolice
+        taillePolice,
+        gras
       };
       if (mode === 'creer') {
         store.ajouterAnnotation({ ...annotation, ...champs }, true);
@@ -96,7 +101,10 @@ export function initialiserEditeurTexte(store) {
 
       inputTitreNote.value = annotation.titre || '';
       inputContenu.value = annotation.contenu || '';
-      selectTaille.value = String(annotation.taillePolice || store.etat.outil.taillePolice || 18);
+      inputTaille.value = String(
+        bornerTaillePolice(annotation.taillePolice ?? store.etat.outil.taillePolice)
+      );
+      optGras.checked = Boolean(annotation.gras ?? store.etat.outil.gras);
 
       modale.showModal();
       setTimeout(() => inputContenu.focus(), 30);

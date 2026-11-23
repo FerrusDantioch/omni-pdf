@@ -72,6 +72,14 @@ function validerAnnotation(ann, index) {
     ) {
       return `Annotation #${index + 1} (${ann.type}) : dimensions invalides.`;
     }
+    if (ann.type === 'texte') {
+      if (ann.taillePolice !== undefined && !estNombreValide(ann.taillePolice, 6, 144)) {
+        return `Annotation texte #${index + 1} : taille de police invalide (6 à 144).`;
+      }
+      if (ann.gras !== undefined && typeof ann.gras !== 'boolean') {
+        return `Annotation texte #${index + 1} : propriété gras invalide.`;
+      }
+    }
   }
 
   return null;

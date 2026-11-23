@@ -140,7 +140,8 @@ function dessinerTexte(ctx, ann, largeurCss, hauteurCss, estSelectionne) {
   const hauteurLigne = taille * 1.28;
 
   ctx.save();
-  ctx.font = `600 ${taille}px Helvetica, Arial, sans-serif`;
+  const graisse = ann.gras ? '700' : '400';
+  ctx.font = `${graisse} ${taille}px Helvetica, Arial, sans-serif`;
   ctx.textBaseline = 'top';
 
   const lignes = decouperLignesTexte(

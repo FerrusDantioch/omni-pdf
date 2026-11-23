@@ -1,6 +1,6 @@
 /* Service Worker d'Omni-PDF : fonctionnement 100 % hors-ligne et mises à jour maîtrisées. */
 /* Change CACHE_VERSION pour déclencher une mise à jour chez les utilisateurs. */
-const CACHE_VERSION = 'omni-pdf-v1.0.0';
+const CACHE_VERSION = 'omni-pdf-v1.0.1';
 
 const FICHIERS_CACHE = [
   './',

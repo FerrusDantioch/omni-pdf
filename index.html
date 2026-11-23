@@ -138,15 +138,28 @@
           </select>
         </label>
 
-        <label class="champ-outil" for="select-taille-police">
+        <label class="champ-outil" for="input-taille-police">
           <span>Texte</span>
-          <select id="select-taille-police" class="select-omni" title="Taille du texte">
-            <option value="14">14 pt</option>
-            <option value="18" selected>18 pt</option>
-            <option value="24">24 pt</option>
-            <option value="32">32 pt</option>
-          </select>
+          <input id="input-taille-police" type="number" class="input-nombre-omni" min="6" max="144" step="1" value="18" inputmode="numeric" list="tailles-police-rapides" title="Taille du texte en points (6 à 144)">
         </label>
+
+        <datalist id="tailles-police-rapides">
+          <option value="8"></option>
+          <option value="10"></option>
+          <option value="12"></option>
+          <option value="14"></option>
+          <option value="16"></option>
+          <option value="18"></option>
+          <option value="24"></option>
+          <option value="32"></option>
+          <option value="48"></option>
+          <option value="72"></option>
+        </datalist>
+
+        <button id="btn-texte-gras" type="button" class="petit-bouton outil-btn" aria-pressed="false" title="Mettre le texte en gras">
+          <strong class="icone-gras">G</strong>
+          <span class="libelle-outil">Gras</span>
+        </button>
 
         <button id="btn-stylet-seul" type="button" class="petit-bouton outil-btn" aria-pressed="false" title="Ignorer les doigts pendant le dessin (idéal avec un stylet)">
           <span class="libelle-outil">Stylet seul</span>
@@ -241,14 +254,15 @@
         <textarea id="input-contenu-texte" placeholder="Écris ton texte ici..."></textarea>
       </div>
 
-      <div id="champ-taille-texte-wrap" class="champ-formulaire cache">
-        <label for="select-taille-texte-edition">Taille du texte</label>
-        <select id="select-taille-texte-edition">
-          <option value="14">14 pt</option>
-          <option value="18">18 pt</option>
-          <option value="24">24 pt</option>
-          <option value="32">32 pt</option>
-        </select>
+      <div id="champ-taille-texte-wrap" class="ligne-options-texte cache">
+        <div class="champ-formulaire">
+          <label for="input-taille-texte-edition">Taille du texte (pt, 6 à 144)</label>
+          <input id="input-taille-texte-edition" type="number" min="6" max="144" step="1" value="18" inputmode="numeric" list="tailles-police-rapides">
+        </div>
+        <label class="case-option">
+          <input id="opt-texte-gras-edition" type="checkbox">
+          <span>Texte en gras</span>
+        </label>
       </div>
 
       <div class="modale-pied">
@@ -343,7 +357,7 @@
         <p>
           <strong>Omni-PDF</strong> est une Progressive Web App 100 % hors-ligne conçue pour lire, annoter et exporter des fichiers PDF sur tablette sans aucun serveur ni compte.
         </p>
-        <p>Version installée : <strong id="apropos-version" class="mono">1.0.0</strong></p>
+        <p>Version installée : <strong id="apropos-version" class="mono">1.0.1</strong></p>
       </section>
 
       <section class="ia">

@@ -4,9 +4,17 @@ import { HistoriqueAnnotations } from './historique.js';
 
 export const ZOOM_MIN = 0.4;
 export const ZOOM_MAX = 3.5;
+export const TAILLE_POLICE_MIN = 6;
+export const TAILLE_POLICE_MAX = 144;
 
 export function bornerZoom(valeur) {
   return Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, Math.round(valeur * 100) / 100));
+}
+
+export function bornerTaillePolice(valeur) {
+  const n = Math.round(Number(valeur));
+  if (!Number.isFinite(n) || n <= 0) return 18;
+  return Math.min(TAILLE_POLICE_MAX, Math.max(TAILLE_POLICE_MIN, n));
 }
 
 export class StoreOmniPdf {
@@ -32,6 +40,7 @@ export class StoreOmniPdf {
         couleur: '#a777ff',
         epaisseur: 4,
         taillePolice: 18,
+        gras: false,
         styletUniquement: false
       },
       annotations: [],
@@ -127,7 +136,7 @@ export class StoreOmniPdf {
   }
 
   definirTaillePolice(taillePolice) {
-    this.etat.outil.taillePolice = Number(taillePolice) || 18;
+    this.etat.outil.taillePolice = bornerTaillePolice(taillePolice);
     if (this.etat.selectionId) {
       const sel = this.trouverSelection();
       if (sel && sel.type === 'texte' && sel.taillePolice !== this.etat.outil.taillePolice) {
@@ -135,6 +144,25 @@ export class StoreOmniPdf {
       }
     }
     this.emettre('outil');
+  }
+
+  definirGras(gras) {
+    const valeur = Boolean(gras);
+    this.etat.outil.gras = valeur;
+    if (this.etat.selectionId) {
+      const sel = this.trouverSelection();
+      if (sel && sel.type === 'texte' && Boolean(sel.gras) !== valeur) {
+        this.modifierAnnotation(sel.id, { gras: valeur });
+      }
+    }
+    this.emettre('outil');
+  }
+
+  basculerGras() {
+    const sel = this.trouverSelection();
+    const etatCourant =
+      sel && sel.type === 'texte' ? Boolean(sel.gras) : Boolean(this.etat.outil.gras);
+    this.definirGras(!etatCourant);
   }
 
   basculerStyletUniquement() {

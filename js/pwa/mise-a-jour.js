@@ -1,6 +1,6 @@
 /* Enregistrement du Service Worker et cycle de mise à jour PWA maîtrisé par l'utilisateur. */
 
-export const APP_VERSION = '1.0.0';
+export const APP_VERSION = '1.0.1';
 
 let enregistrementSw = null;
 let miseAJourPrete = false;
