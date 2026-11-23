@@ -1,0 +1,32 @@
+Licences des éléments tiers utilisés par Omni-PDF (Omni-Système)
+=================================================================
+
+Polices de caractères (embarquées dans le dossier polices/, aucune requête externe)
+------------------------------------------------------------------------------------
+Toutes trois sont distribuées sous la licence SIL Open Font License, version 1.1 (OFL),
+qui autorise leur usage et leur redistribution locale avec ce logiciel.
+
+- Oxanium (titres, boutons) : graisses 500, 700 et 800.
+  Copyright 2019 The Oxanium Project Authors (https://github.com/sevmeyer/oxanium)
+  Licence : polices/OFL-oxanium.txt
+
+- Literata (texte) : version variable (graisse et taille optique), droite et italique.
+  Copyright 2017 The Literata Project Authors (https://github.com/googlefonts/literata)
+  Licence : polices/OFL-literata.txt
+
+- JetBrains Mono (chiffres, indicateurs, horodatages) : graisses 500 et 700.
+  Copyright 2020 The JetBrains Mono Project Authors (https://github.com/JetBrains/JetBrainsMono)
+  Licence : polices/OFL-jetbrains-mono.txt
+
+Texte complet de la licence OFL : https://openfontlicense.org
+
+
+Bibliothèques PDF embarquées (dossier vendor/, 100 % locales)
+--------------------------------------------------------------
+- PDF.js (pdfjs-dist v4.10.38) : lecture et rendu de documents PDF dans le navigateur.
+  Copyright Mozilla and individual contributors
+  Licence : Apache License 2.0 (voir vendor/pdfjs/LICENSE)
+
+- pdf-lib (v1.17.1) : génération et exportation de fichiers PDF standard avec annotations.
+  Copyright (c) 2019 Andrew Dillon
+  Licence : MIT License (voir vendor/pdf-lib/LICENSE.md)

@@ -1,0 +1,93 @@
+/* Gestion de la barre d'outils tactile : outils, couleurs, trait, stylet, Undo/Redo, sélection. */
+
+export function initialiserBarreOutils(store, { surDemandeEditionSelection }) {
+  const boutonsOutils = [...document.querySelectorAll('[data-outil]')];
+  const pastillesCouleur = [...document.querySelectorAll('[data-couleur]')];
+  const selectEpaisseur = document.getElementById('select-epaisseur');
+  const selectTaillePolice = document.getElementById('select-taille-police');
+  const btnStyletSeul = document.getElementById('btn-stylet-seul');
+  const btnAnnuler = document.getElementById('btn-annuler');
+  const btnRetablir = document.getElementById('btn-retablir');
+  const btnEditerSelection = document.getElementById('btn-editer-selection');
+  const btnSupprimerSelection = document.getElementById('btn-supprimer-selection');
+  const btnToggleMiniatures = document.getElementById('btn-toggle-miniatures');
+  const canvasAnnotations = document.getElementById('canvas-annotations');
+
+  boutonsOutils.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      store.definirOutil(btn.dataset.outil);
+    });
+  });
+
+  pastillesCouleur.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      store.definirCouleur(btn.dataset.couleur);
+    });
+  });
+
+  selectEpaisseur.addEventListener('change', () => {
+    store.definirEpaisseur(selectEpaisseur.value);
+  });
+
+  selectTaillePolice.addEventListener('change', () => {
+    store.definirTaillePolice(selectTaillePolice.value);
+  });
+
+  btnStyletSeul.addEventListener('click', () => {
+    store.basculerStyletUniquement();
+  });
+
+  btnAnnuler.addEventListener('click', () => {
+    store.annuler();
+  });
+
+  btnRetablir.addEventListener('click', () => {
+    store.retablir();
+  });
+
+  btnEditerSelection.addEventListener('click', () => {
+    const sel = store.trouverSelection();
+    if (sel && (sel.type === 'texte' || sel.type === 'note')) {
+      surDemandeEditionSelection(sel);
+    }
+  });
+
+  btnSupprimerSelection.addEventListener('click', () => {
+    store.supprimerAnnotation();
+  });
+
+  btnToggleMiniatures.addEventListener('click', () => {
+    store.basculerMiniatures();
+  });
+
+  function synchroniser(etat) {
+    const { outilActif, couleur, epaisseur, taillePolice, styletUniquement } = etat.outil;
+    const docOuvert = etat.document.ouvert;
+    const sel = store.trouverSelection();
+
+    boutonsOutils.forEach((btn) => {
+      btn.setAttribute('aria-pressed', String(btn.dataset.outil === outilActif));
+      btn.disabled = !docOuvert;
+    });
+
+    pastillesCouleur.forEach((btn) => {
+      btn.setAttribute('aria-pressed', String(btn.dataset.couleur === couleur));
+    });
+
+    selectEpaisseur.value = String(epaisseur);
+    selectTaillePolice.value = String(taillePolice);
+    btnStyletSeul.setAttribute('aria-pressed', String(styletUniquement));
+
+    btnAnnuler.disabled = !docOuvert || !store.peutAnnuler();
+    btnRetablir.disabled = !docOuvert || !store.peutRetablir();
+    btnSupprimerSelection.disabled = !docOuvert || !sel;
+    btnEditerSelection.disabled = !docOuvert || !sel || (sel.type !== 'texte' && sel.type !== 'note');
+    btnToggleMiniatures.disabled = !docOuvert;
+    btnToggleMiniatures.setAttribute('aria-pressed', String(etat.vue.voletMiniaturesOuvert));
+
+    canvasAnnotations.classList.toggle('outil-selection', outilActif === 'selection');
+  }
+
+  store.abonner(synchroniser);
+  synchroniser(store.etat);
+}

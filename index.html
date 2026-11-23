@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; worker-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' blob: data:; connect-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none';">
+  <meta name="theme-color" content="#14111d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Omni-PDF — Éditeur &amp; annotateur PDF hors-ligne (Omni-Système)</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="icones/icone-omni-pdf.svg">
+  <link rel="apple-touch-icon" href="icones/icone-192.png">
+  <link rel="stylesheet" href="css/theme-omni.css">
+  <link rel="stylesheet" href="css/app.css">
+  <script src="vendor/pdf-lib/pdf-lib.min.js" defer></script>
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <div class="enveloppe-app">
+    <header class="entete">
+      <div class="entete-in">
+        <div class="marque">
+          <img src="icones/icone-omni-pdf.svg" alt="" width="34" height="34">
+          <span>Omni-<span class="marque-accent">PDF</span></span>
+        </div>
+
+        <span id="doc-titre" class="doc-titre" title="Aucun document ouvert">Aucun document</span>
+
+        <div class="actions-entete">
+          <input id="input-ouvrir-pdf" class="cache" type="file" accept=".pdf,application/pdf">
+          <button id="btn-ouvrir-pdf" type="button" class="petit-bouton" title="Ouvrir un PDF depuis ton appareil">Ouvrir PDF</button>
+          <button id="btn-json" type="button" class="petit-bouton" title="Sauvegarder ou restaurer un fichier JSON">JSON</button>
+          <button id="btn-exporter-pdf" type="button" class="bouton" disabled title="Exporter le PDF avec tes annotations">Exporter PDF</button>
+          <button id="btn-apropos" type="button" class="petit-bouton bouton-apropos" title="Licence, crédits et mise à jour">
+            <span>À propos</span>
+            <span id="pastille-maj" class="pastille-maj cache" aria-label="Mise à jour disponible"></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <nav class="barre-outils" aria-label="Outils d'annotation et d'édition">
+      <div class="groupe-outils">
+        <button id="btn-toggle-miniatures" type="button" class="petit-bouton outil-btn" aria-pressed="false" disabled title="Afficher ou masquer la vue d'ensemble des pages">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="3" y="4" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="4" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="13" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="13" width="7" height="7" rx="1"></rect>
+          </svg>
+          <span class="libelle-outil">Pages</span>
+        </button>
+      </div>
+
+      <div class="groupe-outils" role="group" aria-label="Mode et outils">
+        <button type="button" class="petit-bouton outil-btn" data-outil="selection" aria-pressed="true" title="Sélectionner, déplacer ou modifier une annotation">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M5 3l14 9-6 1.5L10 20z"></path>
+          </svg>
+          <span class="libelle-outil">Sélection</span>
+        </button>
+
+        <button type="button" class="petit-bouton outil-btn" data-outil="stylo" aria-pressed="false" title="Tracé libre au doigt ou au stylet">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M12 20h9"></path>
+            <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+          </svg>
+          <span class="libelle-outil">Stylo</span>
+        </button>
+
+        <button type="button" class="petit-bouton outil-btn" data-outil="surligneur" aria-pressed="false" title="Surligner une zone du PDF">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="m9 11-6 6v3h9l3-3"></path>
+            <path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"></path>
+          </svg>
+          <span class="libelle-outil">Surligneur</span>
+        </button>
+
+        <button type="button" class="petit-bouton outil-btn" data-outil="rectangle" aria-pressed="false" title="Tracer un rectangle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="4" y="6" width="16" height="12" rx="1"></rect>
+          </svg>
+          <span class="libelle-outil">Rectangle</span>
+        </button>
+
+        <button type="button" class="petit-bouton outil-btn" data-outil="ellipse" aria-pressed="false" title="Tracer une ellipse ou un cercle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <ellipse cx="12" cy="12" rx="8" ry="6"></ellipse>
+          </svg>
+          <span class="libelle-outil">Ellipse</span>
+        </button>
+
+        <button type="button" class="petit-bouton outil-btn" data-outil="fleche" aria-pressed="false" title="Tracer une flèche">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M5 19L19 5"></path>
+            <path d="M10 5h9v9"></path>
+          </svg>
+          <span class="libelle-outil">Flèche</span>
+        </button>
+
+        <button type="button" class="petit-bouton outil-btn" data-outil="texte" aria-pressed="false" title="Ajouter un bloc de texte">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M4 6V4h16v2"></path>
+            <path d="M12 4v16"></path>
+            <path d="M9 20h6"></path>
+          </svg>
+          <span class="libelle-outil">Texte</span>
+        </button>
+
+        <button type="button" class="petit-bouton outil-btn" data-outil="note" aria-pressed="false" title="Déposer une note / un commentaire">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span class="libelle-outil">Note</span>
+        </button>
+      </div>
+
+      <div class="groupe-outils palette" role="group" aria-label="Couleur de l'annotation">
+        <span class="pastille-wrap"><button type="button" class="pastille-couleur" data-couleur="#a777ff" aria-pressed="true" aria-label="Violet Omni" title="Violet Omni"></button></span>
+        <span class="pastille-wrap"><button type="button" class="pastille-couleur" data-couleur="#ff4fa3" aria-pressed="false" aria-label="Rose Cyber" title="Rose Cyber"></button></span>
+        <span class="pastille-wrap"><button type="button" class="pastille-couleur" data-couleur="#c9a24a" aria-pressed="false" aria-label="Or Fantasy" title="Or Fantasy"></button></span>
+        <span class="pastille-wrap"><button type="button" class="pastille-couleur" data-couleur="#5fb4ff" aria-pressed="false" aria-label="Bleu Space" title="Bleu Space"></button></span>
+        <span class="pastille-wrap"><button type="button" class="pastille-couleur" data-couleur="#c2412f" aria-pressed="false" aria-label="Rouge Horreur" title="Rouge Horreur"></button></span>
+        <span class="pastille-wrap"><button type="button" class="pastille-couleur" data-couleur="#ffe066" aria-pressed="false" aria-label="Jaune Surligneur" title="Jaune Surligneur"></button></span>
+        <span class="pastille-wrap"><button type="button" class="pastille-couleur" data-couleur="#39d98a" aria-pressed="false" aria-label="Vert" title="Vert"></button></span>
+        <span class="pastille-wrap"><button type="button" class="pastille-couleur" data-couleur="#14111d" aria-pressed="false" aria-label="Encre sombre" title="Encre sombre"></button></span>
+      </div>
+
+      <div class="groupe-outils">
+        <label class="champ-outil" for="select-epaisseur">
+          <span>Trait</span>
+          <select id="select-epaisseur" class="select-omni" title="Épaisseur du tracé">
+            <option value="2">Fin (2)</option>
+            <option value="4" selected>Moyen (4)</option>
+            <option value="7">Épais (7)</option>
+            <option value="12">Large (12)</option>
+          </select>
+        </label>
+
+        <label class="champ-outil" for="select-taille-police">
+          <span>Texte</span>
+          <select id="select-taille-police" class="select-omni" title="Taille du texte">
+            <option value="14">14 pt</option>
+            <option value="18" selected>18 pt</option>
+            <option value="24">24 pt</option>
+            <option value="32">32 pt</option>
+          </select>
+        </label>
+
+        <button id="btn-stylet-seul" type="button" class="petit-bouton outil-btn" aria-pressed="false" title="Ignorer les doigts pendant le dessin (idéal avec un stylet)">
+          <span class="libelle-outil">Stylet seul</span>
+        </button>
+      </div>
+
+      <div class="groupe-outils">
+        <button id="btn-annuler" type="button" class="petit-bouton" disabled title="Annuler la dernière action (Ctrl+Z)">Annuler</button>
+        <button id="btn-retablir" type="button" class="petit-bouton" disabled title="Rétablir l'action annulée (Ctrl+Y)">Rétablir</button>
+        <button id="btn-editer-selection" type="button" class="petit-bouton" disabled title="Modifier le texte ou la note sélectionnée">Éditer</button>
+        <button id="btn-supprimer-selection" type="button" class="petit-bouton danger" disabled title="Supprimer l'annotation sélectionnée">Supprimer</button>
+      </div>
+    </nav>
+
+    <main class="corps-principal">
+      <aside id="volet-miniatures" class="volet-miniatures cache" aria-label="Vue d'ensemble des pages">
+        <div class="volet-entete">
+          <span class="etiquette">Pages du PDF</span>
+          <button id="btn-fermer-miniatures" type="button" class="petit-bouton" aria-label="Fermer la vue d'ensemble">✕</button>
+        </div>
+        <div id="liste-miniatures" class="liste-miniatures"></div>
+      </aside>
+
+      <section id="espace-pdf" class="espace-pdf" aria-label="Zone de lecture et d'annotation">
+        <div id="accueil-vide" class="accueil-vide">
+          <span class="etiquette">Écosystème Omni-Système · 100 % hors-ligne</span>
+          <h1>Annote tes <span>PDF</span> directement sur ta tablette</h1>
+          <p>
+            Ouvre un document PDF stocké sur ton appareil, ajoute des notes, blocs de texte, surlignages, formes ou tracés au stylet, puis exporte un PDF standard lisible partout.
+          </p>
+
+          <div class="zone-depot">
+            <p>Glisse un fichier PDF ici ou choisis une action ci-dessous :</p>
+            <div class="ligne-actions">
+              <button id="btn-accueil-ouvrir" type="button" class="bouton">Ouvrir un fichier PDF</button>
+              <button id="btn-accueil-demo" type="button" class="petit-bouton">Créer un PDF de démo</button>
+              <button id="btn-accueil-json" type="button" class="petit-bouton">Restaurer un JSON</button>
+            </div>
+          </div>
+
+          <ul class="points-cles">
+            <li>Aucun serveur, aucun compte, aucune IA intégrée : tes documents restent sur ton appareil.</li>
+            <li>Sauvegarde automatique dans le navigateur (IndexedDB) + sauvegarde/restauration JSON complète.</li>
+            <li>Compatible stylet, doigt, pincement pour zoomer et sélection/édition d'annotations.</li>
+          </ul>
+        </div>
+
+        <div id="scene-page" class="scene-page cache">
+          <canvas id="canvas-pdf" class="calque-pdf"></canvas>
+          <canvas id="canvas-annotations" class="calque-annotations outil-selection"></canvas>
+        </div>
+      </section>
+    </main>
+
+    <footer class="barre-bas">
+      <div class="groupe-bas">
+        <button id="btn-page-prec" type="button" class="petit-bouton" disabled aria-label="Page précédente">◀</button>
+        <span id="indicateur-page" class="indicateur-page">— / —</span>
+        <button id="btn-page-suiv" type="button" class="petit-bouton" disabled aria-label="Page suivante">▶</button>
+      </div>
+
+      <div class="groupe-bas">
+        <button id="btn-zoom-moins" type="button" class="petit-bouton" disabled aria-label="Dézoomer">−</button>
+        <span id="indicateur-zoom" class="indicateur-zoom">100 %</span>
+        <button id="btn-zoom-plus" type="button" class="petit-bouton" disabled aria-label="Zoomer">+</button>
+        <button id="btn-zoom-largeur" type="button" class="petit-bouton" disabled title="Adapter le PDF à la largeur de l'écran">Largeur</button>
+        <button id="btn-zoom-page" type="button" class="petit-bouton" disabled title="Afficher la page entière">Page</button>
+      </div>
+
+      <div class="indicateur-sauvegarde" aria-live="polite">
+        <span id="point-sauvegarde" class="point-etat"></span>
+        <span id="texte-sauvegarde">Prêt hors-ligne</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Modale d'édition de texte ou de note -->
+  <dialog id="modale-edition-texte" class="modale" aria-labelledby="titre-modale-edition">
+    <form method="dialog" class="modale-corps">
+      <div class="modale-tete">
+        <h2 id="titre-modale-edition">Modifier la note</h2>
+        <button id="btn-fermer-edition" type="button" class="petit-bouton" aria-label="Fermer">✕</button>
+      </div>
+
+      <div id="champ-titre-note-wrap" class="champ-formulaire">
+        <label for="input-titre-note">Titre du commentaire (facultatif)</label>
+        <input id="input-titre-note" type="text" maxlength="80" placeholder="Ex. : À vérifier avant impression">
+      </div>
+
+      <div class="champ-formulaire">
+        <label for="input-contenu-texte">Contenu</label>
+        <textarea id="input-contenu-texte" placeholder="Écris ton texte ici..."></textarea>
+      </div>
+
+      <div id="champ-taille-texte-wrap" class="champ-formulaire cache">
+        <label for="select-taille-texte-edition">Taille du texte</label>
+        <select id="select-taille-texte-edition">
+          <option value="14">14 pt</option>
+          <option value="18">18 pt</option>
+          <option value="24">24 pt</option>
+          <option value="32">32 pt</option>
+        </select>
+      </div>
+
+      <div class="modale-pied">
+        <button id="btn-supprimer-edition" type="button" class="petit-bouton danger">Supprimer</button>
+        <button id="btn-annuler-edition" type="button" class="petit-bouton">Annuler</button>
+        <button id="btn-valider-edition" type="button" class="bouton">Enregistrer</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Modale d'export PDF -->
+  <dialog id="modale-export-pdf" class="modale" aria-labelledby="titre-modale-export">
+    <div class="modale-corps">
+      <div class="modale-tete">
+        <h2 id="titre-modale-export">Exporter le PDF annoté</h2>
+        <button id="btn-fermer-export-pdf" type="button" class="petit-bouton" aria-label="Fermer">✕</button>
+      </div>
+
+      <p>Tes annotations sont dessinées directement dans un nouveau fichier PDF standard, sans modifier ton fichier d'origine.</p>
+
+      <div class="champ-formulaire">
+        <label for="input-nom-export">Nom du fichier exporté</label>
+        <input id="input-nom-export" type="text" value="document-annote.pdf">
+      </div>
+
+      <label class="case-option">
+        <input id="opt-notes-natives" type="checkbox" checked>
+        <span>Intégrer les notes en commentaires PDF standards (popup cliquable)</span>
+      </label>
+
+      <label class="case-option">
+        <input id="opt-recap-notes" type="checkbox" checked>
+        <span>Ajouter une page récapitulative des notes à la fin (lisible sur tout lecteur mobile)</span>
+      </label>
+
+      <div id="msg-export-pdf" class="cadre-message cache"></div>
+
+      <div class="modale-pied">
+        <button id="btn-annuler-export-pdf" type="button" class="petit-bouton">Annuler</button>
+        <button id="btn-lancer-export-pdf" type="button" class="bouton">Télécharger le PDF</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Modale Sauvegarde & Restauration JSON -->
+  <dialog id="modale-json" class="modale" aria-labelledby="titre-modale-json">
+    <div class="modale-corps">
+      <div class="modale-tete">
+        <h2 id="titre-modale-json">Sauvegarde &amp; Restauration JSON</h2>
+        <button id="btn-fermer-json" type="button" class="petit-bouton" aria-label="Fermer">✕</button>
+      </div>
+
+      <section class="modale-section">
+        <h3>Exporter ton travail en JSON</h3>
+        <p>Le fichier JSON contient un numéro de version, un horodatage ISO et toutes tes annotations.</p>
+        <label class="case-option">
+          <input id="opt-json-inclure-pdf" type="checkbox" checked>
+          <span>Inclure aussi le PDF original (archive autonome complète)</span>
+        </label>
+        <div class="ligne-actions">
+          <button id="btn-telecharger-json" type="button" class="bouton">Exporter en JSON</button>
+        </div>
+      </section>
+
+      <section class="modale-section">
+        <h3>Importer un fichier JSON</h3>
+        <p>Restaure une sauvegarde complète ou importe uniquement les annotations sur le PDF déjà ouvert.</p>
+        <input id="input-importer-json" class="cache" type="file" accept=".json,application/json">
+        <div class="ligne-actions">
+          <button id="btn-choisir-json" type="button" class="petit-bouton">Choisir un fichier JSON</button>
+        </div>
+      </section>
+
+      <div id="msg-json" class="cadre-message cache" role="status"></div>
+
+      <div class="modale-pied">
+        <button id="btn-fermer-json-bas" type="button" class="petit-bouton">Fermer</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Modale À propos -->
+  <dialog id="modale-apropos" class="modale" aria-labelledby="titre-modale-apropos">
+    <div class="modale-corps">
+      <div class="modale-tete">
+        <h2 id="titre-modale-apropos">À propos d'Omni-PDF</h2>
+        <button id="btn-fermer-apropos" type="button" class="petit-bouton" aria-label="Fermer">✕</button>
+      </div>
+
+      <section class="modale-section">
+        <span class="statut">Écosystème Omni-Système</span>
+        <p>
+          <strong>Omni-PDF</strong> est une Progressive Web App 100 % hors-ligne conçue pour lire, annoter et exporter des fichiers PDF sur tablette sans aucun serveur ni compte.
+        </p>
+        <p>Version installée : <strong id="apropos-version" class="mono">1.0.0</strong></p>
+      </section>
+
+      <section class="ia">
+        <p><strong>Crédits :</strong> créé par <strong>Ferrus Dantioch</strong> avec assistance IA.</p>
+        <p>
+          <strong>Licence Omni-Système :</strong> Code © 2026 Ferrus Dantioch — <strong>Creative Commons BY-NC-ND 4.0</strong> (partage à l'identique avec attribution ; usage commercial et modifications non autorisés ; voir le fichier local <code>LICENSE</code> et <code>licences-tierces.txt</code>).
+        </p>
+      </section>
+
+      <section class="modale-section">
+        <h3>Mise à jour de l'application</h3>
+        <p id="apropos-statut-pwa">État du mode hors-ligne : vérification...</p>
+        <div id="apropos-msg-maj" class="cadre-message cache"></div>
+        <div class="ligne-actions">
+          <button id="btn-verifier-maj" type="button" class="petit-bouton">Vérifier les mises à jour</button>
+          <button id="btn-appliquer-maj" type="button" class="bouton" disabled>Mettre à jour</button>
+        </div>
+      </section>
+
+      <div class="modale-pied">
+        <button id="btn-fermer-apropos-bas" type="button" class="petit-bouton">Fermer</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div id="zone-toasts" class="zone-toasts" aria-live="polite"></div>
+  <div id="annonce-live" class="lecteur-ecran" aria-live="polite"></div>
+</body>
+</html>

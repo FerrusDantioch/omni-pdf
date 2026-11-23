@@ -1,0 +1,245 @@
+/* Charte graphique et typographies d'Omni-Système (100 % locales). */
+/* Polices embarquées dans polices/ sous licence SIL Open Font License (voir licences-tierces.txt). */
+
+@font-face {
+  font-family: "Oxanium";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../polices/oxanium-latin-500-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Oxanium";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../polices/oxanium-latin-700-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Oxanium";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("../polices/oxanium-latin-800-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Literata";
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url("../polices/literata-latin-opsz-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Literata";
+  font-style: italic;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url("../polices/literata-latin-opsz-italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../polices/jetbrains-mono-latin-500-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../polices/jetbrains-mono-latin-700-normal.woff2") format("woff2");
+}
+
+:root {
+  --nuit: #14111d;       /* fond, encre violette très sombre */
+  --table: #1d1929;      /* surfaces */
+  --trait: #332c47;      /* filets et bordures */
+  --texte: #e9e4f2;      /* texte principal */
+  --discret: #a59cbb;    /* texte secondaire */
+  --omni: #a777ff;       /* violet du logo */
+  --halo: #d6c2ff;       /* lueur de l'anneau */
+  --cyber: #ff4fa3;
+  --fantasy: #c9a24a;
+  --space: #5fb4ff;
+  --horreur: #c2412f;
+  --succes: #39d98a;
+  --f-titre: "Oxanium", "Trebuchet MS", system-ui, sans-serif;
+  --f-texte: "Literata", Georgia, "Times New Roman", serif;
+  --f-des: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--nuit);
+  color: var(--texte);
+  font-family: var(--f-texte);
+  font-size: 1rem;
+  line-height: 1.55;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: var(--halo);
+  text-underline-offset: 3px;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--halo);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--f-titre);
+  text-wrap: balance;
+  line-height: 1.2;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+.etiquette {
+  font-family: var(--f-titre);
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--discret);
+}
+
+.mono {
+  font-family: var(--f-des);
+}
+
+/* Boutons Omni-Système avec cible tactile minimale de 44 px */
+.bouton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  font: 700 0.95rem var(--f-titre);
+  letter-spacing: 0.03em;
+  background: var(--omni);
+  color: #140d24;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 10px 18px;
+  cursor: pointer;
+  text-decoration: none;
+  user-select: none;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.bouton:hover:not(:disabled) {
+  background: var(--halo);
+}
+
+.bouton:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.bouton:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+.petit-bouton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  min-width: 44px;
+  font: 600 0.85rem var(--f-titre);
+  background: var(--table);
+  color: var(--halo);
+  border: 1px solid var(--trait);
+  border-radius: 9px;
+  padding: 8px 12px;
+  cursor: pointer;
+  text-decoration: none;
+  user-select: none;
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.petit-bouton:hover:not(:disabled) {
+  border-color: var(--omni);
+  color: var(--texte);
+}
+
+.petit-bouton:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.petit-bouton[aria-pressed="true"],
+.petit-bouton.actif {
+  background: var(--omni);
+  color: #140d24;
+  border-color: var(--omni);
+}
+
+.petit-bouton.danger:hover:not(:disabled) {
+  border-color: var(--horreur);
+  color: #ffb8ae;
+}
+
+.statut {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: 600 0.72rem var(--f-titre);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--halo);
+  border: 1px solid color-mix(in srgb, var(--omni) 55%, transparent);
+  border-radius: 999px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+.ia {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1px dashed var(--omni);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--omni) 6%, transparent);
+}
+
+.ia p {
+  color: var(--discret);
+  font-size: 0.92rem;
+}
+
+.ia strong {
+  color: var(--texte);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

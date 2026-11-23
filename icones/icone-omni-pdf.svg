@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Icône Omni-PDF">
+  <defs>
+    <radialGradient id="halo" cx="50%" cy="42%" r="48%">
+      <stop offset="0%" stop-color="#2b1f4d"/>
+      <stop offset="100%" stop-color="#14111d"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="108" fill="url(#halo)"/>
+  <circle cx="256" cy="256" r="204" fill="none" stroke="#d6c2ff" stroke-width="6" opacity="0.5"/>
+  <circle cx="256" cy="256" r="186" fill="none" stroke="#a777ff" stroke-width="3" opacity="0.35" stroke-dasharray="12 10"/>
+  <!-- Feuille PDF -->
+  <path d="M164 114 H296 L356 174 V386 A22 22 0 0 1 334 408 H164 A22 22 0 0 1 142 386 V136 A22 22 0 0 1 164 114 Z" fill="#1d1929" stroke="#a777ff" stroke-width="12" stroke-linejoin="round"/>
+  <path d="M296 114 V174 H356" fill="#2a1660" stroke="#a777ff" stroke-width="10" stroke-linejoin="round"/>
+  <!-- Lignes de texte et surlignage -->
+  <rect x="176" y="206" width="118" height="16" rx="8" fill="#d6c2ff" opacity="0.75"/>
+  <rect x="176" y="242" width="142" height="22" rx="6" fill="#ff4fa3" opacity="0.45"/>
+  <rect x="176" y="284" width="102" height="14" rx="7" fill="#a59cbb" opacity="0.55"/>
+  <!-- Stylet d'annotation -->
+  <g transform="translate(292 288) rotate(-35)">
+    <rect x="-14" y="-88" width="28" height="106" rx="8" fill="#a777ff" stroke="#14111d" stroke-width="6"/>
+    <polygon points="-14,18 14,18 0,46" fill="#d6c2ff" stroke="#14111d" stroke-width="4" stroke-linejoin="round"/>
+    <rect x="-14" y="-88" width="28" height="20" rx="6" fill="#c9a24a"/>
+  </g>
+</svg>

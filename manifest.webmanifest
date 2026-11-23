@@ -1,0 +1,32 @@
+{
+  "name": "Omni-PDF — Omni-Système",
+  "short_name": "Omni-PDF",
+  "description": "Éditeur et annotateur de fichiers PDF 100 % hors-ligne, conçu pour tablette dans l'écosystème Omni-Système.",
+  "lang": "fr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#14111d",
+  "theme_color": "#14111d",
+  "icons": [
+    {
+      "src": "./icones/icone-omni-pdf.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./icones/icone-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icones/icone-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
